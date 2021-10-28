@@ -1,0 +1,29 @@
+
+require(tidyverse)
+
+set.seed(8675309)
+
+df_giver <- data.frame(person_g=c('A','B','C','D','E','F'),
+                       family_g=c('1','1','2','2','3','3'))
+df_reciever <- data.frame(person_r=c('A','B','C','D','E','F'),
+                          family_r=c('1','1','2','2','3','3'))
+
+output <- NULL
+for (i in 1:nrow(df_giver)){
+  x_g<- df_giver[i,]
+  x_r<- sample_n(df_reciever,1)
+  while (x_g$person_g==x_r$person_r|x_g$family_g==x_r$family_r){
+    x_r<- sample_n(df_reciever,1) 
+  }
+  df_reciever = df_reciever %>% filter(person_r!=x_r$person_r)
+  
+  df_out <- cbind(x_g,x_r)
+  
+ output[[i]] <- df_out
+ print(i)
+}
+
+Results <- data.table::rbindlist(output)
+
+
+
